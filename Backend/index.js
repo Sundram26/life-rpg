@@ -22,9 +22,7 @@ const PORT = process.env.PORT ?? 3000;
 // ─── GLOBAL MIDDLEWARE ───────────────────────────────────────────────────────
 
 app.use(cors({
-  origin:  process.env.NODE_ENV === 'production'
-    ? ['https://your-app.vercel.app']  // lock down in production
-    : '*',
+  origin: '*',
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
 }));
 
