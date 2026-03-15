@@ -32,7 +32,7 @@ const PRESET_TASKS = [
 export default function TasksPage() {
   const { submitTask, showToast, profile } = useGame()
 
-  const [form, setForm]         = useState({ name: '', statAffected: 'intelligence', difficulty: 'medium', source: 'custom' })
+  const [form, setForm] = useState({ name: '', statAffected: 'intelligence', difficulty: 'medium', source: 'custom', minutes: 30 })
   const [loading, setLoading]   = useState(false)
   const [aiLoading, setAiLoad]  = useState(false)
   const [aiResult, setAiResult] = useState(null)
@@ -52,7 +52,7 @@ export default function TasksPage() {
       let baseXp, baseCredits, aiEvaluated = false, aiNotes = null
 
       try {
-        const aiData = await api.evaluateTask({ description: form.name })
+        const aiData = await api.evaluateTask({ description: form.name, minutesSpent: form.minutes || 30 })
         setAiResult(aiData.result)
         baseXp       = aiData.result.rewards.xp
         baseCredits  = aiData.result.rewards.credits
@@ -114,10 +114,16 @@ export default function TasksPage() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="input-group">
+             <div className="input-group">
                 <label className="input-label">What did you do?</label>
                 <input className="input" placeholder="e.g. Studied chemistry for 1 hour" value={form.name}
                   onChange={set('name')} required minLength={3} maxLength={120} />
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">How long? (minutes)</label>
+                <input className="input" type="number" min={1} max={1440} placeholder="30"
+                  value={form.minutes} onChange={set('minutes')} />
               </div>
 
               {/* Stat selector */}

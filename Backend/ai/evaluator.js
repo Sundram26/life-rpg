@@ -29,13 +29,13 @@ function sanitise(description, minutesSpent) {
   if (desc.length < 3)   throw Object.assign(new Error('Description too short (min 3 chars)'), { status: 400 })
   if (desc.length > 300) throw Object.assign(new Error('Description too long (max 300 chars)'), { status: 400 })
 
-  const mins = parseInt(minutesSpent, 10)
-  if (isNaN(mins) || mins < 1)   throw Object.assign(new Error('minutesSpent must be a positive integer'), { status: 400 })
-  if (mins > 1440)               throw Object.assign(new Error('minutesSpent cannot exceed 1440 (24 hours)'), { status: 400 })
+  // Default to 30 minutes if not provided
+  const mins = minutesSpent ? parseInt(minutesSpent, 10) : 30
+  if (isNaN(mins) || mins < 1) return { desc, mins: 30 }
+  if (mins > 1440) return { desc, mins: 1440 }
 
   return { desc, mins }
 }
-
 // ── Neutral fallback (used when AI is unavailable) ────────────────────────────
 
 function neutralFallback(desc, mins) {
