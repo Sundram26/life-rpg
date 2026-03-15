@@ -25,7 +25,8 @@ export const api = {
   addTask:        (body)   => request('/addTask',     { method: 'POST', body: JSON.stringify(body) }),
   takeLoan:       (body)   => request('/takeLoan',    { method: 'POST', body: JSON.stringify(body) }),
   repayLoan:      (body)   => request('/repayLoan',   { method: 'POST', body: JSON.stringify(body) }),
-  getLeaderboard: (params) => {
+  evaluateTask:   (body)   => request('/ai/evaluate', { method: 'POST', body: JSON.stringify(body), auth: false }),
+getLeaderboard: (params) => {
     const q = new URLSearchParams(params ?? {}).toString()
     return request(`/leaderboard${q ? '?' + q : ''}`)
   },
