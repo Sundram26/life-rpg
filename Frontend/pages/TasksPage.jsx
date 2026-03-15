@@ -190,17 +190,33 @@ export default function TasksPage() {
           </div>
 
           {/* AI evaluation preview */}
-          {aiResult && (
-            <div className="card fade-up" style={{ marginBottom: 16, border: '1px solid var(--gold)', background: 'var(--gold-glow)' }}>
-              <div style={{ fontSize: 13, color: 'var(--gold)', fontWeight: 700, marginBottom: 8 }}>✨ AI Evaluation</div>
-              <div style={{ fontSize: 12, color: 'var(--dim)', marginBottom: 6 }}>{aiResult.feedback?.reasoning}</div>
-              <div style={{ display: 'flex', gap: 16 }}>
-                <span style={{ fontSize: 13 }}>⚡ {aiResult.rewards.xp} XP</span>
-                <span style={{ fontSize: 13 }}>🪙 {aiResult.rewards.credits} credits</span>
-                <span style={{ fontSize: 13, textTransform: 'capitalize' }}>📊 {aiResult.rewards.difficulty}</span>
+          {aiResult && (() => {
+            const isUnproductive = aiResult.evaluation.category === 'unproductive'
+            const isMixed = aiResult.evaluation.category === 'mixed'
+            return (
+              <div className="card fade-up" style={{
+                marginBottom: 16,
+                border: `1px solid ${isUnproductive ? 'var(--error, #f87171)' : isMixed ? 'var(--gold)' : 'var(--gold)'}`,
+                background: isUnproductive ? 'rgba(248,113,113,0.08)' : 'var(--gold-glow)'
+              }}>
+                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: isUnproductive ? '#f87171' : 'var(--gold)' }}>
+                  {isUnproductive ? '⚠️ Unproductive Task' : isMixed ? '🔀 Mixed Activity' : '✨ AI Evaluation'}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--dim)', marginBottom: 8 }}>{aiResult.feedback?.reasoning}</div>
+                {isUnproductive
+                  ? <div style={{ fontSize: 12, color: '#f87171' }}>No XP or credits awarded. Try something more productive! 💪</div>
+                  : <div style={{ display: 'flex', gap: 16 }}>
+                      <span style={{ fontSize: 13 }}>⚡ {aiResult.rewards.xp} XP</span>
+                      <span style={{ fontSize: 13 }}>🪙 {aiResult.rewards.credits} credits</span>
+                      <span style={{ fontSize: 13, textTransform: 'capitalize' }}>📊 {aiResult.rewards.difficulty}</span>
+                    </div>
+                }
+                {aiResult.feedback?.tip && (
+                  <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 8, fontStyle: 'italic' }}>💡 {aiResult.feedback.tip}</div>
+                )}
               </div>
-            </div>
-          )}
+            )
+          })()}
 
           {/* Result card */}
           {lastResult && (
