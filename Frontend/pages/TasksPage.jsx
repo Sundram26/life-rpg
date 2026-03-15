@@ -58,6 +58,12 @@ export default function TasksPage() {
         baseCredits  = aiData.result.rewards.credits
         aiEvaluated  = true
         aiNotes      = aiData.result.feedback?.reasoning ?? null
+
+        // Auto-update stat based on AI detection
+        const detectedStat = aiData.result.stat?.primary
+        if (detectedStat && ['intelligence','strength','discipline','social'].includes(detectedStat)) {
+          setForm(p => ({ ...p, statAffected: detectedStat }))
+        }
       } catch {
         // AI unavailable — fall back to difficulty defaults
       } finally {
