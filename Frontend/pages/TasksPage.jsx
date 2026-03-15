@@ -54,15 +54,25 @@ export default function TasksPage() {
       try {
         const aiData = await api.evaluateTask({ description: form.name, minutesSpent: form.minutes || 30 })
         setAiResult(aiData.result)
-        baseXp       = aiData.result.rewards.xp
-        baseCredits  = aiData.result.rewards.credits
         aiEvaluated  = true
         aiNotes      = aiData.result.feedback?.reasoning ?? null
 
-        // Auto-update stat based on AI detection
-        const detectedStat = aiData.result.stat?.primary
-        if (detectedStat && ['intelligence','strength','discipline','social'].includes(detectedStat)) {
-          setForm(p => ({ ...p, statAffected: detectedStat }))
+        const isUnproductive = aiData.result.evaluation.category === 'unproductive'
+
+        if (isUnproductive) {
+          // For unproductive tasks — no XP, no credits, just log it
+          baseXp      = 1
+          baseCredits = 1
+          showToast('warning', 'Unproductive Task', aiData.result.feedback?.reasoning ?? 'No rewards for this one!')
+        } else {
+          baseXp      = aiData.result.rewards.xp
+          baseCredits = aiData.result.rewards.credits
+
+          // Auto-update stat based on AI detection
+          const detectedStat = aiData.result.stat?.primary
+          if (detectedStat && ['intelligence','strength','discipline','social'].includes(detectedStat)) {
+            setForm(p => ({ ...p, statAffected: detectedStat }))
+          }
         }
       } catch {
         // AI unavailable — fall back to difficulty defaults
