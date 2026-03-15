@@ -31,7 +31,7 @@ const PRESET_TASKS = [
 export default function TasksPage() {
   const { submitTask, showToast, profile } = useGame()
 
-  const [form, setForm]         = useState({ name: '', stat: 'intelligence', difficulty: 'medium', source: 'custom' })
+  const [form, setForm] = useState({ name: '', statAffected: 'intelligence', difficulty: 'medium', source: 'custom' })
   const [loading, setLoading]   = useState(false)
   const [lastResult, setResult] = useState(null)
   const set = (k) => (v) => setForm(p => ({ ...p, [k]: typeof v === 'string' ? v : v.target.value }))
@@ -88,15 +88,15 @@ export default function TasksPage() {
                 <label className="input-label">Stat affected</label>
                 <div className="grid-2">
                   {STATS.map(s => (
-                    <button key={s.id} type="button" onClick={() => set('stat')(s.id)}
+                    <button key={s.id} type="button" onClick={() => set('statAffected')(s.id)}
                       style={{
                         padding: '10px 12px', borderRadius: 8, border: '1px solid',
-                        borderColor: form.stat === s.id ? s.color : 'var(--border)',
-                        background: form.stat === s.id ? `${s.color}15` : 'var(--bg2)',
+                        borderColor: form.statAffected === s.id ? s.color : 'var(--border)',
+                        background: form.statAffected === s.id ? `${s.color}15` : 'var(--bg2)',
                         cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
                       }}>
                       <div style={{ fontSize: 16, marginBottom: 2 }}>{s.icon}</div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: form.stat === s.id ? s.color : 'var(--text)', fontFamily: 'var(--font-body)' }}>{s.label}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: form.statAffected === s.id ? s.color : 'var(--text)', fontFamily: 'var(--font-body)' }}>{s.label}</div>
                       <div style={{ fontSize: 11, color: 'var(--faint)', fontFamily: 'var(--font-body)', lineHeight: 1.3, marginTop: 2 }}>{s.desc}</div>
                     </button>
                   ))}
