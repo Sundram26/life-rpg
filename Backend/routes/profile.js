@@ -1,7 +1,7 @@
 import { Router }              from 'express';
 import { getDb, COLLECTIONS } from '../config/firebase.js';
-import { LOAN, calcLoanBalance } from '../config/gameConstants.js';
-import { ok, err, computeDecay } from '../utils/helpers.js';
+import { LOAN } from '../config/gameConstants.js';
+import { ok, err, computeDecay, calcLoanBalance } from '../utils/helpers.js';
 import { authenticate }       from '../middleware/auth.js';
 import { asyncHandler }       from '../middleware/errorHandler.js';
 
