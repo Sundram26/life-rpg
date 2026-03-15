@@ -254,9 +254,7 @@ router.post(
         tx.update(loanUpdates.ref, loanUpdates.data);
       }
 
-      // Refresh leaderboard score
-      await refreshLeaderboardScore(uid, tx);
-
+      
       return {
         taskId:       taskRef.id,
         xpAwarded,
@@ -273,6 +271,9 @@ router.post(
         loanCleared:  loanUpdates ? loanUpdates.data.status === 'repaid' : false,
       };
     });
+
+    // Refresh leaderboard outside transaction
+    try { await refreshLeaderboardScore(uid); } catch (_) {}
 
     return ok(res, {
       message:    'Quest complete! Keep going.',
