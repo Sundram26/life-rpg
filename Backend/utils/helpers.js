@@ -141,12 +141,12 @@ export function loanRepaymentSlice(earned) {
 
 // ─── LEADERBOARD HELPER ─────────────────────────────────────────────────────
 
-export async function refreshLeaderboardScore(userId, transaction) {
+export async function refreshLeaderboardScore(userId) {
   const db = getDb();
 
   const [creditDoc, userDoc] = await Promise.all([
-    transaction.get(db.collection(COLLECTIONS.CREDITS).doc(userId)),
-    transaction.get(db.collection(COLLECTIONS.USERS).doc(userId)),
+    db.collection(COLLECTIONS.CREDITS).doc(userId).get(),
+    db.collection(COLLECTIONS.USERS).doc(userId).get(),
   ]);
 
   if (!creditDoc.exists || !userDoc.exists) return;
@@ -161,20 +161,19 @@ export async function refreshLeaderboardScore(userId, transaction) {
     level:          user.level             ?? 1,
   });
 
-  const lbRef = db.collection(COLLECTIONS.LEADERBOARD)
-    .doc(`${userId}_weekly`);
-
-  transaction.set(lbRef, {
-    user_id:          userId,
-    period:           'weekly',
-    score,
-    credits_earned:   credits.weekly_earned ?? 0,
-    xp_earned:        user.xp               ?? 0,
-    tasks_completed:  user.tasks_completed  ?? 0,
-    streak_contribution: user.streak_days   ?? 0,
-    is_bot:           false,
-    updated_at:       Timestamp.now(),
-  }, { merge: true });
+  await db.collection(COLLECTIONS.LEADERBOARD)
+    .doc(`${userId}_weekly`)
+    .set({
+      user_id:             userId,
+      period:              'weekly',
+      score,
+      credits_earned:      credits.weekly_earned ?? 0,
+      xp_earned:           user.xp               ?? 0,
+      tasks_completed:     user.tasks_completed  ?? 0,
+      streak_contribution: user.streak_days       ?? 0,
+      is_bot:              false,
+      updated_at:          Timestamp.now(),
+    }, { merge: true });
 }
 
 // ─── DATE HELPERS ───────────────────────────────────────────────────────────
