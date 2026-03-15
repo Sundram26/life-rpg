@@ -12,7 +12,7 @@ import loansRouter       from './routes/loans.js';
 import leaderboardRouter from './routes/leaderboard.js';
 import profileRouter     from './routes/profile.js';
 import aiRouter          from './ai/routes.js';
-import botRouter         from './bot/routes.js';
+import { createBotRoutes } from './bot/routes.js';
 import loanRouter        from './loan/routes.js';
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ app.use('/repayLoan',    writeLimiter,  loansRouter);
 app.use('/leaderboard',                leaderboardRouter);
 app.use('/profile',                    profileRouter);
 app.use('/ai',                         aiRouter);
-app.use('/bot',                        botRouter);
+app.use('/bot', createBotRoutes(getDb(), authenticate));
 app.use('/loan',                       loanRouter);
 
 // ─── 404 ─────────────────────────────────────────────────────────────────────
