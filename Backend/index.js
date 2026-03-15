@@ -3,8 +3,9 @@ import express       from 'express';
 import cors          from 'cors';
 import rateLimit     from 'express-rate-limit';
 
-import { initFirebase }     from './config/firebase.js';
+import { initFirebase, getDb } from './config/firebase.js';
 import { errorHandler }     from './middleware/errorHandler.js';
+import { authenticate }     from './middleware/auth.js';
 
 import createUserRouter  from './routes/createUser.js';
 import addTaskRouter     from './routes/addTask.js';
