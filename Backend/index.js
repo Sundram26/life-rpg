@@ -60,12 +60,12 @@ app.get('/health', (req, res) => {
 
 // ─── ROUTES ──────────────────────────────────────────────────────────────────
 
-app.post('/createUser',      writeLimiter,  createUserRouter);
-app.post('/addTask',         writeLimiter,  addTaskRouter);
-app.post('/takeLoan',        writeLimiter,  loansRouter);
-app.post('/repayLoan',       writeLimiter,  loansRouter);
-app.get('/leaderboard',                    leaderboardRouter);
-app.get('/profile',                        profileRouter);
+app.use('/createUser',   writeLimiter,  createUserRouter);
+app.use('/addTask',      writeLimiter,  addTaskRouter);
+app.use('/takeLoan',     writeLimiter,  loansRouter);
+app.use('/repayLoan',    writeLimiter,  loansRouter);
+app.use('/leaderboard',                leaderboardRouter);
+app.use('/profile',                    profileRouter);
 
 // ─── 404 ─────────────────────────────────────────────────────────────────────
 
